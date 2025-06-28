@@ -138,12 +138,12 @@ const HomePage = () => {
 
       {/* Day Toggle Row */}
       <div className="px-6 py-4 bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="flex space-x-2">
+        <div className="grid grid-cols-3 gap-2">
           {dayOptions.map((day) => (
             <button
               key={day.id}
               onClick={() => setSelectedDay(day.id)}
-              className={`px-6 py-3 rounded-full whitespace-nowrap transition-all duration-200 backdrop-blur-sm ${
+              className={`px-6 py-3 rounded-full text-center transition-all duration-200 backdrop-blur-sm ${
                 selectedDay === day.id
                   ? 'bg-emerald-600/80 text-white border border-emerald-500/30'
                   : 'bg-white/20 text-gray-700 hover:bg-white/30 border border-white/30'

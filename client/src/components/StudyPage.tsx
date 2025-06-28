@@ -93,31 +93,17 @@ const StudyPage = () => {
       </div>
 
       <div className="px-6 py-6 space-y-6">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-white/20 backdrop-blur-md rounded-xl p-4 border border-white/30 text-center">
-            <Clock className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-gray-900">24h</p>
-            <p className="text-sm text-gray-600">This week</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-md rounded-xl p-4 border border-white/30 text-center">
-            <Target className="w-8 h-8 text-green-600 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-gray-900">8/10</p>
-            <p className="text-sm text-gray-600">Goals met</p>
-          </div>
-        </div>
-
         {/* Upcoming Lectures Section */}
         <div>
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Upcoming Lectures</h2>
           
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 mb-4">
-            <div className="flex space-x-2">
+            <div className="grid grid-cols-3 gap-2">
               {dayOptions.map((day) => (
                 <button
                   key={day.id}
                   onClick={() => setSelectedLectureDay(day.id)}
-                  className={`px-4 py-2 rounded-full whitespace-nowrap transition-all duration-200 ${
+                  className={`px-4 py-2 rounded-full text-center transition-all duration-200 ${
                     selectedLectureDay === day.id
                       ? 'bg-blue-600/80 text-white backdrop-blur-sm'
                       : 'bg-gray-100/50 text-gray-700 hover:bg-gray-200/50 backdrop-blur-sm'
@@ -154,12 +140,12 @@ const StudyPage = () => {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Upcoming Tasks</h2>
           
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 mb-4">
-            <div className="flex space-x-2">
+            <div className="grid grid-cols-3 gap-2">
               {dayOptions.map((day) => (
                 <button
                   key={day.id}
                   onClick={() => setSelectedTaskDay(day.id)}
-                  className={`px-4 py-2 rounded-full whitespace-nowrap transition-all duration-200 ${
+                  className={`px-4 py-2 rounded-full text-center transition-all duration-200 ${
                     selectedTaskDay === day.id
                       ? 'bg-purple-600/80 text-white backdrop-blur-sm'
                       : 'bg-gray-100/50 text-gray-700 hover:bg-gray-200/50 backdrop-blur-sm'
