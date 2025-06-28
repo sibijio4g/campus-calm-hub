@@ -22,9 +22,10 @@ This is a full-stack web application designed to help university students manage
 
 ### Database Layer
 - **ORM**: Drizzle ORM for type-safe database operations
-- **Database**: PostgreSQL (configured but currently using in-memory storage)
+- **Database**: PostgreSQL with live connection and data storage
 - **Schema**: Centralized schema definitions in `/shared/schema.ts`
 - **Migrations**: Drizzle Kit for database migrations
+- **Tables**: Users, Activities, Subjects with full relational mapping
 
 ## Key Components
 
@@ -100,6 +101,14 @@ This is a full-stack web application designed to help university students manage
   - Set up proper TanStack Query configuration
   - Fixed navigation functions throughout the application
   - Verified app functionality with tabbed interface working correctly
+- June 28, 2025. Added PostgreSQL database and Outlook calendar integration
+  - Created comprehensive database schema with Users, Activities, and Subjects tables
+  - Implemented full CRUD operations with Drizzle ORM
+  - Built RESTful API endpoints for all database operations
+  - Added Microsoft Graph API service for Outlook calendar two-way sync
+  - Created Outlook integration UI component with connection status
+  - Added sample data to demonstrate database functionality
+  - Updated homepage to show live database connection and activity count
 
 ## User Preferences
 

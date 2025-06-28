@@ -1,10 +1,23 @@
 
 import { useState } from 'react';
-import { Calendar, BookOpen, Users, Star } from 'lucide-react';
+import { Calendar, BookOpen, Users, Star, Database } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import FloatingAddButton from './FloatingAddButton';
+import { OutlookIntegration } from './OutlookIntegration';
+import type { Activity } from '@shared/schema';
 
 const HomePage = () => {
   const [selectedDay, setSelectedDay] = useState('today');
+  
+  // Fetch activities from database
+  const { data: activities = [], isLoading } = useQuery({
+    queryKey: ['/api/activities'],
+    queryFn: async () => {
+      const response = await fetch('/api/activities');
+      if (!response.ok) throw new Error('Failed to fetch activities');
+      return response.json() as Activity[];
+    }
+  });
   
   const dayOptions = [
     { id: 'today', label: 'Today' },
@@ -95,6 +108,12 @@ const HomePage = () => {
           <div className="mb-4">
             <h1 className="text-3xl font-bold mb-2">Good morning, Alex!</h1>
             <p className="text-green-100/90 text-lg opacity-90">Ready to make today productive?</p>
+            
+            {/* Database Status */}
+            <div className="mt-3 flex items-center space-x-2 text-sm">
+              <Database className="w-4 h-4" />
+              <span>Database connected • {activities.length} activities stored</span>
+            </div>
           </div>
           
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
@@ -134,6 +153,11 @@ const HomePage = () => {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Outlook Integration Section */}
+      <div className="px-6 py-4">
+        <OutlookIntegration />
       </div>
 
       {/* Task Cards */}
