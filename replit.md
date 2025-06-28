@@ -94,6 +94,12 @@ This is a full-stack web application designed to help university students manage
 
 ## Changelog
 - June 28, 2025. Initial setup
+- June 28, 2025. Successfully migrated from Lovable to Replit environment
+  - Converted routing from React Router to Wouter for better compatibility
+  - Installed missing dependencies (react-router-dom, sonner, nanoid)
+  - Set up proper TanStack Query configuration
+  - Fixed navigation functions throughout the application
+  - Verified app functionality with tabbed interface working correctly
 
 ## User Preferences
 
