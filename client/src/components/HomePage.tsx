@@ -155,10 +155,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Outlook Integration Section */}
-      <div className="px-6 py-4">
-        <OutlookIntegration />
-      </div>
+
 
       {/* Task Cards */}
       <div className="px-6 py-4 space-y-3 pb-24">
