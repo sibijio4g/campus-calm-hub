@@ -112,7 +112,7 @@ const StudyPage = () => {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Upcoming Lectures</h2>
           
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 mb-4">
-            <div className="flex space-x-2 overflow-x-auto pb-2">
+            <div className="flex space-x-2">
               {dayOptions.map((day) => (
                 <button
                   key={day.id}
@@ -154,7 +154,7 @@ const StudyPage = () => {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Upcoming Tasks</h2>
           
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20 mb-4">
-            <div className="flex space-x-2 overflow-x-auto pb-2">
+            <div className="flex space-x-2">
               {dayOptions.map((day) => (
                 <button
                   key={day.id}
@@ -218,18 +218,7 @@ const StudyPage = () => {
                       <p className="text-sm text-gray-600">Next: {subject.nextClass}</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">{subject.progress}%</p>
-                      <div className="w-16 bg-gray-200/50 rounded-full h-2 mt-1">
-                        <div 
-                          className="bg-blue-600/70 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${subject.progress}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400" />
-                  </div>
+                  <ChevronRight className="w-5 h-5 text-gray-400" />
                 </div>
               </button>
             ))}

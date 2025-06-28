@@ -98,25 +98,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Outlook integration routes (placeholder for now)
-  app.get("/api/outlook/auth", async (req, res) => {
+  // Google Calendar integration routes
+  app.get("/api/google/auth", async (req, res) => {
     try {
-      // This would redirect to Microsoft OAuth
-      res.json({ 
-        message: "Outlook integration setup required", 
-        authUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
-      });
+      const userId = 1; // For demo purposes, using fixed user ID
+      const authUrl = `https://accounts.google.com/oauth/authorize?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_REDIRECT_URI}&scope=https://www.googleapis.com/auth/calendar&response_type=code&access_type=offline&state=${userId}`;
+      res.json({ authUrl });
     } catch (error) {
-      res.status(500).json({ error: "Failed to initiate Outlook auth" });
+      res.status(500).json({ error: "Failed to generate Google auth URL" });
     }
   });
 
-  app.post("/api/outlook/sync", async (req, res) => {
+  app.get("/api/google/callback", async (req, res) => {
     try {
-      // This would trigger sync with Outlook calendar
-      res.json({ message: "Outlook sync feature ready for configuration" });
+      const { code, state } = req.query;
+      const userId = parseInt(state as string) || 1;
+      
+      // For demo: just mark user as connected
+      const user = await storage.getUser(userId);
+      if (user) {
+        await storage.updateUserGoogleTokens(userId, "demo_token", "demo_refresh", new Date(Date.now() + 3600000));
+      }
+      
+      res.redirect('/profile?connected=true');
     } catch (error) {
-      res.status(500).json({ error: "Failed to sync with Outlook" });
+      res.status(500).json({ error: "Failed to handle Google auth callback" });
+    }
+  });
+
+  app.get("/api/google/calendars", async (req, res) => {
+    try {
+      const userId = 1; // For demo purposes
+      const user = await storage.getUser(userId);
+      
+      if (!user?.googleAccessToken) {
+        return res.status(401).json({ error: "User not connected to Google Calendar" });
+      }
+      
+      // For demo: return sample calendars
+      const calendars = [
+        { id: 'primary', summary: 'Primary Calendar', primary: true, accessRole: 'owner' },
+        { id: 'university', summary: 'University Schedule', primary: false, accessRole: 'writer' }
+      ];
+      
+      res.json(calendars);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch calendars" });
+    }
+  });
+
+  app.post("/api/google/sync", async (req, res) => {
+    try {
+      const userId = 1; // For demo purposes
+      const { calendarId } = req.body;
+      
+      // For demo: just return success
+      res.json({ message: "Calendar sync completed", calendarId });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to sync with Google Calendar" });
+    }
+  });
+
+  app.get("/api/profile", async (req, res) => {
+    try {
+      const userId = 1; // For demo purposes
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      
+      res.json({
+        id: user.id,
+        username: user.username,
+        googleConnected: !!user.googleAccessToken,
+        selectedCalendarId: user.selectedCalendarId
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch profile" });
+    }
+  });
+
+  app.put("/api/profile/calendar", async (req, res) => {
+    try {
+      const userId = 1; // For demo purposes
+      const { calendarId } = req.body;
+      
+      await storage.updateUserGoogleTokens(userId, "demo_token", "demo_refresh", new Date(Date.now() + 3600000));
+      
+      res.json({ message: "Calendar selection updated", calendarId });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update calendar selection" });
     }
   });
 

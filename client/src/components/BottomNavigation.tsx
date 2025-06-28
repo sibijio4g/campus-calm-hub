@@ -1,5 +1,6 @@
 
-import { Home, BookOpen, Users, Star } from 'lucide-react';
+import { Home, BookOpen, Users, Star, User } from 'lucide-react';
+import { useLocation } from 'wouter';
 
 interface BottomNavigationProps {
   activeTab: string;
@@ -7,11 +8,14 @@ interface BottomNavigationProps {
 }
 
 const BottomNavigation = ({ activeTab, onTabChange }: BottomNavigationProps) => {
+  const [, setLocation] = useLocation();
+  
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'study', label: 'Study', icon: BookOpen },
     { id: 'social', label: 'Social', icon: Users },
-    { id: 'clubs', label: 'Clubs', icon: Star }
+    { id: 'clubs', label: 'Clubs', icon: Star },
+    { id: 'profile', label: 'Profile', icon: User, isProfile: true }
   ];
 
   return (
@@ -22,7 +26,13 @@ const BottomNavigation = ({ activeTab, onTabChange }: BottomNavigationProps) => 
           return (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id)}
+              onClick={() => {
+                if (tab.isProfile) {
+                  setLocation('/profile');
+                } else {
+                  onTabChange(tab.id);
+                }
+              }}
               className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 ${
                 activeTab === tab.id
                   ? 'text-emerald-600'

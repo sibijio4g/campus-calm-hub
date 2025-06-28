@@ -3,19 +3,19 @@ import { useState } from 'react';
 import { Calendar, BookOpen, Users, Star, Database } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import FloatingAddButton from './FloatingAddButton';
-import { OutlookIntegration } from './OutlookIntegration';
+
 import type { Activity } from '@shared/schema';
 
 const HomePage = () => {
   const [selectedDay, setSelectedDay] = useState('today');
   
   // Fetch activities from database
-  const { data: activities = [], isLoading } = useQuery({
+  const { data: activities = [], isLoading } = useQuery<Activity[]>({
     queryKey: ['/api/activities'],
     queryFn: async () => {
       const response = await fetch('/api/activities');
       if (!response.ok) throw new Error('Failed to fetch activities');
-      return response.json() as Activity[];
+      return response.json();
     }
   });
   
@@ -138,7 +138,7 @@ const HomePage = () => {
 
       {/* Day Toggle Row */}
       <div className="px-6 py-4 bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="flex space-x-2 overflow-x-auto pb-2">
+        <div className="flex space-x-2">
           {dayOptions.map((day) => (
             <button
               key={day.id}
@@ -155,10 +155,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Outlook Integration Section */}
-      <div className="px-6 py-4">
-        <OutlookIntegration />
-      </div>
+
 
       {/* Task Cards */}
       <div className="px-6 py-4 space-y-3 pb-24">

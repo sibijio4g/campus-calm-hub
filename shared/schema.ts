@@ -7,9 +7,10 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
-  outlookAccessToken: text("outlook_access_token"),
-  outlookRefreshToken: text("outlook_refresh_token"),
-  outlookTokenExpiry: timestamp("outlook_token_expiry"),
+  googleAccessToken: text("google_access_token"),
+  googleRefreshToken: text("google_refresh_token"),
+  googleTokenExpiry: timestamp("google_token_expiry"),
+  selectedCalendarId: text("selected_calendar_id"),
 });
 
 export const activities = pgTable("activities", {
@@ -23,7 +24,8 @@ export const activities = pgTable("activities", {
   location: text("location"),
   priority: text("priority"), // 'high', 'medium', 'low'
   status: text("status").notNull().default('pending'), // 'pending', 'in-progress', 'completed', 'cancelled'
-  outlookEventId: text("outlook_event_id"), // For two-way sync
+  googleEventId: text("google_event_id"), // For two-way sync
+  googleCalendarId: text("google_calendar_id"), // Which calendar the event belongs to
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

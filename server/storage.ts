@@ -7,7 +7,7 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  updateUserOutlookTokens(userId: number, accessToken: string, refreshToken: string, expiry: Date): Promise<void>;
+  updateUserGoogleTokens(userId: number, accessToken: string, refreshToken: string, expiry: Date): Promise<void>;
   
   // Activity methods
   getActivities(userId: number): Promise<Activity[]>;
@@ -40,13 +40,13 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserOutlookTokens(userId: number, accessToken: string, refreshToken: string, expiry: Date): Promise<void> {
+  async updateUserGoogleTokens(userId: number, accessToken: string, refreshToken: string, expiry: Date): Promise<void> {
     await db
       .update(users)
       .set({
-        outlookAccessToken: accessToken,
-        outlookRefreshToken: refreshToken,
-        outlookTokenExpiry: expiry,
+        googleAccessToken: accessToken,
+        googleRefreshToken: refreshToken,
+        googleTokenExpiry: expiry,
       })
       .where(eq(users.id, userId));
   }
