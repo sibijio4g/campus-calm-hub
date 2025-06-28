@@ -1,24 +1,25 @@
-
 import { useState } from 'react';
-import { Calendar, BookOpen, Users, Star, Database, Edit3 } from 'lucide-react';
+import { Calendar, BookOpen, Users, Star, Database, Edit3, Mic } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import FloatingAddButton from './FloatingAddButton';
+import { EnhancedAddActivityForm } from './EnhancedAddActivityForm';
 import { EditEventModal } from './EditEventModal';
-
+import { VoiceInput } from './VoiceInput';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { apiRequest } from '@/lib/queryClient';
 import type { Activity } from '@shared/schema';
 
 const HomePage = () => {
   const [selectedDay, setSelectedDay] = useState('today');
   const [editingEvent, setEditingEvent] = useState<Activity | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showVoiceInput, setShowVoiceInput] = useState(false);
   
   // Fetch activities from database
   const { data: activities = [], isLoading } = useQuery<Activity[]>({
     queryKey: ['/api/activities'],
-    queryFn: async () => {
-      const response = await fetch('/api/activities');
-      if (!response.ok) throw new Error('Failed to fetch activities');
-      return response.json();
-    }
+    queryFn: () => apiRequest('/api/activities')
   });
   
   const dayOptions = [
@@ -27,56 +28,34 @@ const HomePage = () => {
     { id: 'this-week', label: 'This Week' }
   ];
 
-  const formatDate = (dateString: string) => {
-    if (dateString === 'Today' || dateString === 'Tomorrow') {
-      return dateString;
-    }
-    
-    // For other dates, format as "14 Jun (Mon)"
-    const date = new Date();
-    if (dateString === 'Friday') {
-      date.setDate(date.getDate() + ((5 - date.getDay() + 7) % 7)); // Next Friday
-    } else if (dateString === 'Saturday') {
-      date.setDate(date.getDate() + ((6 - date.getDay() + 7) % 7)); // Next Saturday
-    }
-    
-    const options: Intl.DateTimeFormatOptions = { 
-      day: 'numeric', 
-      month: 'short', 
-      weekday: 'short' 
-    };
-    return date.toLocaleDateString('en-GB', options).replace(',', '');
-  };
-
-  const tasks = {
-    today: [
-      { id: 1, type: 'assignment', title: 'Physics Essay Due', time: '11:59 PM', priority: 'high' },
-      { id: 2, type: 'class', title: 'Mathematics Lecture', time: '2:00 PM', priority: 'medium' },
-      { id: 3, type: 'social', title: 'Study Group', time: '4:30 PM', priority: 'low' }
-    ],
-    tomorrow: [
-      { id: 4, type: 'exam', title: 'Chemistry Midterm', time: '9:00 AM', priority: 'high' },
-      { id: 5, type: 'club', title: 'Drama Club Meeting', time: '6:00 PM', priority: 'medium' }
-    ],
-    'this-week': [
-      { id: 6, type: 'assignment', title: 'History Project', time: formatDate('Friday'), priority: 'high' },
-      { id: 7, type: 'social', title: 'Campus Festival', time: formatDate('Saturday'), priority: 'low' }
-    ]
-  };
-
   const getTaskIcon = (type: string) => {
     switch (type) {
       case 'assignment':
       case 'exam':
+      case 'lecture':
         return <BookOpen className="w-4 h-4" />;
-      case 'class':
-        return <Calendar className="w-4 h-4" />;
+      case 'meeting':
+      case 'event':
+        return <Star className="w-4 h-4" />;
+      case 'party':
+      case 'study-group':
       case 'social':
         return <Users className="w-4 h-4" />;
-      case 'club':
-        return <Star className="w-4 h-4" />;
       default:
         return <Calendar className="w-4 h-4" />;
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'academic':
+        return 'border-l-blue-400/70 bg-blue-50/30';
+      case 'social':
+        return 'border-l-green-400/70 bg-green-50/30';
+      case 'club':
+        return 'border-l-purple-400/70 bg-purple-50/30';
+      default:
+        return 'border-l-gray-400/70 bg-gray-50/30';
     }
   };
 
@@ -93,9 +72,17 @@ const HomePage = () => {
     }
   };
 
+  const handleVoiceTranscript = (transcript: string) => {
+    // Process voice input and show add form
+    setShowVoiceInput(false);
+    setShowAddForm(true);
+  };
+
+  const isMobile = window.innerWidth < 768;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50/30 via-emerald-50/20 to-teal-50/30 pb-24">
-      {/* Hero Section - Top 35% */}
+      {/* Hero Section */}
       <div 
         className="relative h-[35vh] bg-gradient-to-br from-emerald-600/90 via-green-700/90 to-teal-800/90 overflow-hidden backdrop-blur-sm"
         style={{
@@ -122,16 +109,16 @@ const HomePage = () => {
             <h2 className="text-xl font-semibold mb-3">Today's Summary</h2>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-green-100/80">Tasks due</span>
-                <span className="font-semibold">3</span>
+                <span className="text-green-100/80">Academic tasks</span>
+                <span className="font-semibold">{activities.filter(a => a.category === 'academic').length}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-green-100/80">Classes</span>
-                <span className="font-semibold">1</span>
+                <span className="text-green-100/80">Social events</span>
+                <span className="font-semibold">{activities.filter(a => a.category === 'social').length}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-green-100/80">Events</span>
-                <span className="font-semibold">1</span>
+                <span className="text-green-100/80">Club activities</span>
+                <span className="font-semibold">{activities.filter(a => a.category === 'club').length}</span>
               </div>
             </div>
           </div>
@@ -157,8 +144,6 @@ const HomePage = () => {
         </div>
       </div>
 
-
-
       {/* Activity Cards */}
       <div className="px-6 py-4 space-y-3 pb-24">
         {isLoading ? (
@@ -169,7 +154,9 @@ const HomePage = () => {
           activities.map((activity) => (
             <div
               key={activity.id}
-              className={`bg-white/20 backdrop-blur-md rounded-xl p-4 border-l-4 border border-white/30 transition-all duration-200 hover:bg-white/30 cursor-pointer group ${getPriorityColor(activity.priority || 'medium')}`}
+              className={`bg-white/20 backdrop-blur-md rounded-xl p-4 border-l-4 border border-white/30 transition-all duration-200 hover:bg-white/30 cursor-pointer group ${
+                activity.category ? getCategoryColor(activity.category) : getPriorityColor(activity.priority || 'medium')
+              }`}
               onClick={() => setEditingEvent(activity)}
             >
               <div className="flex items-start justify-between">
@@ -189,6 +176,15 @@ const HomePage = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
+                  {activity.category && (
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
+                      activity.category === 'academic' ? 'bg-blue-100/50 text-blue-800' :
+                      activity.category === 'social' ? 'bg-green-100/50 text-green-800' :
+                      'bg-purple-100/50 text-purple-800'
+                    }`}>
+                      {activity.category}
+                    </span>
+                  )}
                   {activity.priority && (
                     <span className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
                       activity.priority === 'high' ? 'bg-red-100/50 text-red-800' :
@@ -210,7 +206,84 @@ const HomePage = () => {
         )}
       </div>
 
-      <FloatingAddButton />
+      {/* Floating Action Buttons */}
+      <div className="fixed bottom-20 right-6 flex flex-col space-y-3 z-40">
+        {/* Voice Input Button */}
+        <button
+          onClick={() => setShowVoiceInput(true)}
+          className="w-14 h-14 bg-gradient-to-r from-green-600/90 to-emerald-600/90 backdrop-blur-md hover:from-green-700/90 hover:to-emerald-700/90 text-white rounded-full shadow-lg transition-all duration-200 flex items-center justify-center border border-white/20"
+          title="Voice Input"
+        >
+          <Mic className="w-6 h-6" />
+        </button>
+        
+        {/* Add Activity Button */}
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="w-14 h-14 bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md hover:from-blue-700/90 hover:to-purple-700/90 text-white rounded-full shadow-lg transition-all duration-200 flex items-center justify-center border border-white/20"
+          title="Add Activity"
+        >
+          <Calendar className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Voice Input Modal/Drawer */}
+      {isMobile ? (
+        <Drawer open={showVoiceInput} onOpenChange={setShowVoiceInput}>
+          <DrawerContent className="bg-white/80 backdrop-blur-md border-gray-300">
+            <DrawerHeader>
+              <DrawerTitle className="text-center text-gray-900">
+                Voice Input
+              </DrawerTitle>
+            </DrawerHeader>
+            <VoiceInput
+              onTranscript={handleVoiceTranscript}
+              onClose={() => setShowVoiceInput(false)}
+              isActive={showVoiceInput}
+            />
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <Dialog open={showVoiceInput} onOpenChange={setShowVoiceInput}>
+          <DialogContent className="bg-white/80 backdrop-blur-md border-gray-300 max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-center text-gray-900">
+                Voice Input
+              </DialogTitle>
+            </DialogHeader>
+            <VoiceInput
+              onTranscript={handleVoiceTranscript}
+              onClose={() => setShowVoiceInput(false)}
+              isActive={showVoiceInput}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Add Activity Modal/Drawer */}
+      {isMobile ? (
+        <Drawer open={showAddForm} onOpenChange={setShowAddForm}>
+          <DrawerContent className="bg-white/80 backdrop-blur-md border-gray-300">
+            <DrawerHeader>
+              <DrawerTitle className="text-center text-gray-900">
+                Add New Activity
+              </DrawerTitle>
+            </DrawerHeader>
+            <EnhancedAddActivityForm onClose={() => setShowAddForm(false)} />
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
+          <DialogContent className="bg-white/80 backdrop-blur-md border-gray-300 max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-center text-gray-900">
+                Add New Activity
+              </DialogTitle>
+            </DialogHeader>
+            <EnhancedAddActivityForm onClose={() => setShowAddForm(false)} />
+          </DialogContent>
+        </Dialog>
+      )}
       
       {/* Edit Event Modal */}
       {editingEvent && (
