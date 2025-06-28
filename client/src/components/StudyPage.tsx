@@ -1,12 +1,26 @@
 import { useState } from 'react';
-import { BookOpen, Clock, Target, Calendar, ChevronRight } from 'lucide-react';
+import { BookOpen, Clock, Target, Calendar, ChevronRight, Edit3 } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { useQuery } from '@tanstack/react-query';
 import FloatingAddButton from './FloatingAddButton';
+import { EditEventModal } from './EditEventModal';
+import type { Activity } from '@shared/schema';
 
 const StudyPage = () => {
   const [selectedLectureDay, setSelectedLectureDay] = useState('today');
   const [selectedTaskDay, setSelectedTaskDay] = useState('today');
+  const [editingEvent, setEditingEvent] = useState<Activity | null>(null);
   const [, setLocation] = useLocation();
+
+  // Fetch activities from database
+  const { data: activities = [], isLoading } = useQuery<Activity[]>({
+    queryKey: ['/api/activities'],
+    queryFn: async () => {
+      const response = await fetch('/api/activities');
+      if (!response.ok) throw new Error('Failed to fetch activities');
+      return response.json();
+    }
+  });
   
   const dayOptions = [
     { id: 'today', label: 'Today' },
@@ -116,18 +130,36 @@ const StudyPage = () => {
           </div>
 
           <div className="space-y-3">
-            {lectures[selectedLectureDay as keyof typeof lectures]?.map((lecture) => (
-              <div key={lecture.id} className="bg-white/20 backdrop-blur-md rounded-xl p-4 border border-white/30">
-                <div className="flex items-start space-x-3">
-                  <Calendar className="w-5 h-5 text-blue-600 mt-1" />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 mb-1">{lecture.title}</h3>
-                    <p className="text-sm text-gray-600 mb-1">{lecture.time} • {lecture.location}</p>
-                    <p className="text-sm text-gray-500">{lecture.professor}</p>
+            {isLoading ? (
+              <div className="text-center py-4">
+                <p className="text-gray-500">Loading lectures...</p>
+              </div>
+            ) : activities.filter(activity => activity.type === 'lecture').length > 0 ? (
+              activities.filter(activity => activity.type === 'lecture').map((lecture) => (
+                <div 
+                  key={lecture.id} 
+                  className="bg-white/20 backdrop-blur-md rounded-xl p-4 border border-white/30 hover:bg-white/30 transition-all duration-200 cursor-pointer group"
+                  onClick={() => setEditingEvent(lecture)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <Calendar className="w-5 h-5 text-blue-600 mt-1" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-1">{lecture.title}</h3>
+                        <p className="text-sm text-gray-600 mb-1">
+                          {new Date(lecture.startTime).toLocaleString()}
+                          {lecture.location && ` • ${lecture.location}`}
+                        </p>
+                        {lecture.description && (
+                          <p className="text-sm text-gray-500">{lecture.description}</p>
+                        )}
+                      </div>
+                    </div>
+                    <Edit3 className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
                   </div>
                 </div>
-              </div>
-            )) || (
+              ))
+            ) : (
               <div className="text-center py-4">
                 <p className="text-gray-500">No lectures scheduled</p>
               </div>
@@ -158,29 +190,49 @@ const StudyPage = () => {
           </div>
 
           <div className="space-y-3">
-            {tasks[selectedTaskDay as keyof typeof tasks]?.map((task) => (
-              <div key={task.id} className={`bg-white/20 backdrop-blur-md rounded-xl p-4 border-l-4 border border-white/30 ${getPriorityColor(task.priority)}`}>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-3">
-                    <BookOpen className="w-5 h-5 text-gray-600 mt-1" />
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">{task.title}</h3>
-                      <p className="text-sm text-gray-600 mb-1">{task.time}</p>
-                      <p className="text-sm text-gray-500">{task.subject}</p>
+            {isLoading ? (
+              <div className="text-center py-4">
+                <p className="text-gray-500">Loading tasks...</p>
+              </div>
+            ) : activities.filter(activity => activity.type === 'task').length > 0 ? (
+              activities.filter(activity => activity.type === 'task').map((task) => (
+                <div 
+                  key={task.id} 
+                  className={`bg-white/20 backdrop-blur-md rounded-xl p-4 border-l-4 border border-white/30 hover:bg-white/30 transition-all duration-200 cursor-pointer group ${getPriorityColor(task.priority || 'medium')}`}
+                  onClick={() => setEditingEvent(task)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      <BookOpen className="w-5 h-5 text-gray-600 mt-1" />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-1">{task.title}</h3>
+                        <p className="text-sm text-gray-600 mb-1">
+                          {new Date(task.startTime).toLocaleString()}
+                          {task.location && ` • ${task.location}`}
+                        </p>
+                        {task.description && (
+                          <p className="text-sm text-gray-500">{task.description}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      {task.priority && (
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
+                          task.priority === 'high' ? 'bg-red-100/50 text-red-800' :
+                          task.priority === 'medium' ? 'bg-yellow-100/50 text-yellow-800' :
+                          'bg-green-100/50 text-green-800'
+                        }`}>
+                          {task.priority}
+                        </span>
+                      )}
+                      <Edit3 className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
                     </div>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
-                    task.priority === 'high' ? 'bg-red-100/50 text-red-800' :
-                    task.priority === 'medium' ? 'bg-yellow-100/50 text-yellow-800' :
-                    'bg-green-100/50 text-green-800'
-                  }`}>
-                    {task.priority}
-                  </span>
                 </div>
-              </div>
-            )) || (
+              ))
+            ) : (
               <div className="text-center py-4">
-                <p className="text-gray-500">No tasks due</p>
+                <p className="text-gray-500">No tasks scheduled</p>
               </div>
             )}
           </div>
@@ -213,6 +265,15 @@ const StudyPage = () => {
       </div>
 
       <FloatingAddButton />
+      
+      {/* Edit Event Modal */}
+      {editingEvent && (
+        <EditEventModal
+          event={editingEvent}
+          isOpen={!!editingEvent}
+          onClose={() => setEditingEvent(null)}
+        />
+      )}
     </div>
   );
 };

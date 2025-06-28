@@ -1,8 +1,24 @@
 
-import { Calendar, Users } from 'lucide-react';
+import { useState } from 'react';
+import { Calendar, Users, Edit3 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import FloatingAddButton from './FloatingAddButton';
+import { EditEventModal } from './EditEventModal';
+import type { Activity } from '@shared/schema';
 
 const SocialPage = () => {
+  const [editingEvent, setEditingEvent] = useState<Activity | null>(null);
+
+  // Fetch activities from database
+  const { data: activities = [], isLoading } = useQuery<Activity[]>({
+    queryKey: ['/api/activities'],
+    queryFn: async () => {
+      const response = await fetch('/api/activities');
+      if (!response.ok) throw new Error('Failed to fetch activities');
+      return response.json();
+    }
+  });
+
   const formatDate = (dateString: string) => {
     if (dateString === 'Today 4:30 PM' || dateString === 'Tomorrow') {
       return dateString;

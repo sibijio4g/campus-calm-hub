@@ -37,6 +37,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/activities/:id", async (req, res) => {
     try {
+      const activityId = parseInt(req.params.id);
+      const updateData = req.body;
+      
+      // Convert date strings back to Date objects
+      if (updateData.startTime) {
+        updateData.startTime = new Date(updateData.startTime);
+      }
+      if (updateData.endTime) {
+        updateData.endTime = new Date(updateData.endTime);
+      }
+      
+      const activity = await storage.updateActivity(activityId, updateData);
+      
+      if (!activity) {
+        return res.status(404).json({ error: "Activity not found" });
+      }
+      
+      res.json(activity);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update activity" });
+    }
+  });
+
+  app.delete("/api/activities/:id", async (req, res) => {
+    try {
+      const activityId = parseInt(req.params.id);
+      const success = await storage.deleteActivity(activityId);
+      
+      if (!success) {
+        return res.status(404).json({ error: "Activity not found" });
+      }
+      
+      res.json({ message: "Activity deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete activity" });
+    }
+  });
+
+  app.put("/api/activities/:id", async (req, res) => {
+    try {
       const id = parseInt(req.params.id);
       const updateData = req.body;
       

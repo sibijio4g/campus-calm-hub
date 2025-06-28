@@ -1,13 +1,15 @@
 
 import { useState } from 'react';
-import { Calendar, BookOpen, Users, Star, Database } from 'lucide-react';
+import { Calendar, BookOpen, Users, Star, Database, Edit3 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import FloatingAddButton from './FloatingAddButton';
+import { EditEventModal } from './EditEventModal';
 
 import type { Activity } from '@shared/schema';
 
 const HomePage = () => {
   const [selectedDay, setSelectedDay] = useState('today');
+  const [editingEvent, setEditingEvent] = useState<Activity | null>(null);
   
   // Fetch activities from database
   const { data: activities = [], isLoading } = useQuery<Activity[]>({
@@ -157,42 +159,67 @@ const HomePage = () => {
 
 
 
-      {/* Task Cards */}
+      {/* Activity Cards */}
       <div className="px-6 py-4 space-y-3 pb-24">
-        {tasks[selectedDay as keyof typeof tasks]?.map((task) => (
-          <div
-            key={task.id}
-            className={`bg-white/20 backdrop-blur-md rounded-xl p-4 border-l-4 border border-white/30 transition-all duration-200 hover:bg-white/30 ${getPriorityColor(task.priority)}`}
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex items-start space-x-3">
-                <div className="mt-1 text-gray-600">
-                  {getTaskIcon(task.type)}
+        {isLoading ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Loading activities...</p>
+          </div>
+        ) : activities.length > 0 ? (
+          activities.map((activity) => (
+            <div
+              key={activity.id}
+              className={`bg-white/20 backdrop-blur-md rounded-xl p-4 border-l-4 border border-white/30 transition-all duration-200 hover:bg-white/30 cursor-pointer group ${getPriorityColor(activity.priority || 'medium')}`}
+              onClick={() => setEditingEvent(activity)}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-start space-x-3">
+                  <div className="mt-1 text-gray-600">
+                    {getTaskIcon(activity.type)}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 mb-1">{activity.title}</h3>
+                    <p className="text-sm text-gray-600">
+                      {new Date(activity.startTime).toLocaleString()}
+                      {activity.location && ` • ${activity.location}`}
+                    </p>
+                    {activity.description && (
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">{activity.description}</p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">{task.title}</h3>
-                  <p className="text-sm text-gray-600">{task.time}</p>
+                <div className="flex items-center space-x-2">
+                  {activity.priority && (
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
+                      activity.priority === 'high' ? 'bg-red-100/50 text-red-800' :
+                      activity.priority === 'medium' ? 'bg-yellow-100/50 text-yellow-800' :
+                      'bg-green-100/50 text-green-800'
+                    }`}>
+                      {activity.priority}
+                    </span>
+                  )}
+                  <Edit3 className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
                 </div>
-              </div>
-              <div className="flex items-center">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
-                  task.priority === 'high' ? 'bg-red-100/50 text-red-800' :
-                  task.priority === 'medium' ? 'bg-yellow-100/50 text-yellow-800' :
-                  'bg-green-100/50 text-green-800'
-                }`}>
-                  {task.priority}
-                </span>
               </div>
             </div>
-          </div>
-        )) || (
+          ))
+        ) : (
           <div className="text-center py-8">
-            <p className="text-gray-500">No tasks scheduled for {selectedDay}</p>
+            <p className="text-gray-500">No activities scheduled</p>
           </div>
         )}
       </div>
 
       <FloatingAddButton />
+      
+      {/* Edit Event Modal */}
+      {editingEvent && (
+        <EditEventModal
+          event={editingEvent}
+          isOpen={!!editingEvent}
+          onClose={() => setEditingEvent(null)}
+        />
+      )}
     </div>
   );
 };
