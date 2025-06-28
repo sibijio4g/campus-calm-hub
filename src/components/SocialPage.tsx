@@ -1,5 +1,5 @@
-
 import { Calendar, Users } from 'lucide-react';
+import FloatingAddButton from './FloatingAddButton';
 
 const SocialPage = () => {
   const events = [
@@ -46,6 +46,8 @@ const SocialPage = () => {
           </div>
         </div>
       </div>
+
+      <FloatingAddButton />
     </div>
   );
 };

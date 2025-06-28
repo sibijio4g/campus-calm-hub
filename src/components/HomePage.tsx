@@ -1,6 +1,6 @@
-
 import { useState } from 'react';
 import { Calendar, BookOpen, Users, Star } from 'lucide-react';
+import FloatingAddButton from './FloatingAddButton';
 
 const HomePage = () => {
   const [selectedDay, setSelectedDay] = useState('today');
@@ -57,7 +57,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50/30 via-green-50/20 to-teal-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-green-50/30 via-emerald-50/20 to-teal-50/30 pb-24">
       {/* Hero Section - Top 35% */}
       <div 
         className="relative h-[35vh] bg-gradient-to-br from-emerald-600/90 via-green-700/90 to-teal-800/90 overflow-hidden backdrop-blur-sm"
@@ -148,6 +148,8 @@ const HomePage = () => {
           </div>
         )}
       </div>
+
+      <FloatingAddButton />
     </div>
   );
 };

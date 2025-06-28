@@ -1,5 +1,5 @@
-
 import { Star, Users, Calendar } from 'lucide-react';
+import FloatingAddButton from './FloatingAddButton';
 
 const ClubsPage = () => {
   const myClubs = [
@@ -49,6 +49,8 @@ const ClubsPage = () => {
           </div>
         </div>
       </div>
+
+      <FloatingAddButton />
     </div>
   );
 };

@@ -1,7 +1,7 @@
-
 import { useState } from 'react';
 import { BookOpen, Clock, Target, Calendar, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import FloatingAddButton from './FloatingAddButton';
 
 const StudyPage = () => {
   const [selectedLectureDay, setSelectedLectureDay] = useState('today');
@@ -65,7 +65,7 @@ const StudyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-indigo-50/30 pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/30 via-indigo-50/20 to-cyan-50/30 pb-24">
       <div className="bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-sm px-6 py-8 text-white">
         <h1 className="text-2xl font-bold mb-2">Study Dashboard</h1>
         <p className="text-blue-100/90">Track your academic progress</p>
@@ -215,6 +215,8 @@ const StudyPage = () => {
           </div>
         </div>
       </div>
+
+      <FloatingAddButton />
     </div>
   );
 };
