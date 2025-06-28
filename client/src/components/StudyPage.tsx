@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { BookOpen, Clock, Target, Calendar, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import FloatingAddButton from './FloatingAddButton';
 
 const StudyPage = () => {
   const [selectedLectureDay, setSelectedLectureDay] = useState('today');
   const [selectedTaskDay, setSelectedTaskDay] = useState('today');
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   
   const dayOptions = [
     { id: 'today', label: 'Today' },
@@ -82,7 +82,7 @@ const StudyPage = () => {
   };
 
   const handleSubjectClick = (subjectName: string) => {
-    navigate(`/subject/${subjectName.toLowerCase()}`);
+    setLocation(`/subject/${subjectName.toLowerCase()}`);
   };
 
   return (

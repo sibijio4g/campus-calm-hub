@@ -1,12 +1,14 @@
 
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useRoute, useLocation } from 'wouter';
 import { ArrowLeft, Calendar, BookOpen, Clock } from 'lucide-react';
 
 const SubjectPage = () => {
-  const { subjectName } = useParams<{ subjectName: string }>();
-  const navigate = useNavigate();
+  const [match, params] = useRoute('/subject/:subjectName');
+  const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState('lectures');
+  
+  const subjectName = params?.subjectName;
 
   const subjectData = {
     mathematics: {
@@ -69,7 +71,7 @@ const SubjectPage = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Subject not found</h1>
           <button
-            onClick={() => navigate('/study')}
+            onClick={() => setLocation('/')}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg"
           >
             Back to Study
@@ -107,7 +109,7 @@ const SubjectPage = () => {
       <div className={`bg-gradient-to-r ${getColorClasses(subject.color).split(' ')[0]} ${getColorClasses(subject.color).split(' ')[1]} backdrop-blur-sm px-6 py-8 text-white`}>
         <div className="flex items-center mb-4">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => setLocation('/')}
             className="mr-4 p-2 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
