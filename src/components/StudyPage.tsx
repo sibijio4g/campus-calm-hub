@@ -14,6 +14,27 @@ const StudyPage = () => {
     { id: 'this-week', label: 'This Week' }
   ];
 
+  const formatDate = (dateString: string) => {
+    if (dateString === 'Today' || dateString === 'Tomorrow') {
+      return dateString;
+    }
+    
+    // For other dates, format as "14 Jun (Mon)"
+    const date = new Date();
+    if (dateString.includes('Friday')) {
+      date.setDate(date.getDate() + ((5 - date.getDay() + 7) % 7)); // Next Friday
+    } else if (dateString.includes('10:00 AM')) {
+      date.setDate(date.getDate() + 1); // Tomorrow for chemistry
+    }
+    
+    const options: Intl.DateTimeFormatOptions = { 
+      day: 'numeric', 
+      month: 'short', 
+      weekday: 'short' 
+    };
+    return date.toLocaleDateString('en-GB', options).replace(',', '');
+  };
+
   const lectures = {
     today: [
       { id: 1, title: 'Mathematics Lecture', time: '2:00 PM', location: 'Room 101', professor: 'Dr. Smith' },
@@ -23,7 +44,7 @@ const StudyPage = () => {
       { id: 3, title: 'Chemistry Seminar', time: '10:00 AM', location: 'Room 305', professor: 'Dr. Brown' }
     ],
     'this-week': [
-      { id: 4, title: 'History Workshop', time: 'Friday 1:00 PM', location: 'Room 201', professor: 'Prof. Davis' }
+      { id: 4, title: 'History Workshop', time: `${formatDate('Friday')} 1:00 PM`, location: 'Room 201', professor: 'Prof. Davis' }
     ]
   };
 
@@ -36,7 +57,7 @@ const StudyPage = () => {
       { id: 3, title: 'Chemistry Lab Report', time: '9:00 AM', subject: 'Chemistry', priority: 'high' }
     ],
     'this-week': [
-      { id: 4, title: 'History Project', time: 'Friday', subject: 'History', priority: 'medium' }
+      { id: 4, title: 'History Project', time: formatDate('Friday'), subject: 'History', priority: 'medium' }
     ]
   };
 
@@ -44,7 +65,7 @@ const StudyPage = () => {
     { name: 'Mathematics', progress: 75, nextClass: 'Today 2:00 PM', color: 'bg-blue-500' },
     { name: 'Physics', progress: 60, nextClass: 'Today 4:30 PM', color: 'bg-purple-500' },
     { name: 'Chemistry', progress: 85, nextClass: 'Tomorrow 10:00 AM', color: 'bg-green-500' },
-    { name: 'History', progress: 45, nextClass: 'Friday 1:00 PM', color: 'bg-orange-500' }
+    { name: 'History', progress: 45, nextClass: `${formatDate('Friday')} 1:00 PM`, color: 'bg-orange-500' }
   ];
 
   const getPriorityColor = (priority: string) => {

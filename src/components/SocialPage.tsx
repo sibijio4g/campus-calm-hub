@@ -1,13 +1,45 @@
+
 import { Calendar, Users } from 'lucide-react';
 import FloatingAddButton from './FloatingAddButton';
 
 const SocialPage = () => {
+  const formatDate = (dateString: string) => {
+    if (dateString === 'Today 4:30 PM' || dateString === 'Tomorrow') {
+      return dateString;
+    }
+    
+    // For other dates, format as "14 Jun (Mon) time"
+    const date = new Date();
+    if (dateString.includes('Friday')) {
+      date.setDate(date.getDate() + ((5 - date.getDay() + 7) % 7)); // Next Friday
+    } else if (dateString.includes('Monday')) {
+      date.setDate(date.getDate() + ((1 - date.getDay() + 7) % 7)); // Next Monday
+    } else if (dateString.includes('Wednesday')) {
+      date.setDate(date.getDate() + ((3 - date.getDay() + 7) % 7)); // Next Wednesday
+    } else if (dateString.includes('Saturday')) {
+      date.setDate(date.getDate() + ((6 - date.getDay() + 7) % 7)); // Next Saturday
+    }
+    
+    const options: Intl.DateTimeFormatOptions = { 
+      day: 'numeric', 
+      month: 'short', 
+      weekday: 'short' 
+    };
+    const formattedDate = date.toLocaleDateString('en-GB', options).replace(',', '');
+    
+    // Extract time from original string
+    const timeMatch = dateString.match(/\d{1,2}:\d{2}\s?(AM|PM)/i);
+    const time = timeMatch ? timeMatch[0] : '';
+    
+    return `${formattedDate} ${time}`;
+  };
+
   const events = [
     { id: 1, title: 'Study Group - Mathematics', time: 'Today 4:30 PM', attendees: 5, type: 'study' },
-    { id: 2, title: 'Campus Movie Night', time: 'Friday 7:00 PM', attendees: 23, type: 'fun' },
-    { id: 3, title: 'Physics Lab Partners', time: 'Monday 2:00 PM', attendees: 3, type: 'study' },
-    { id: 4, title: 'Book Club Meeting', time: 'Wednesday 6:00 PM', attendees: 12, type: 'study' },
-    { id: 5, title: 'Basketball Tournament', time: 'Saturday 10:00 AM', attendees: 8, type: 'fun' }
+    { id: 2, title: 'Campus Movie Night', time: formatDate('Friday 7:00 PM'), attendees: 23, type: 'fun' },
+    { id: 3, title: 'Physics Lab Partners', time: formatDate('Monday 2:00 PM'), attendees: 3, type: 'study' },
+    { id: 4, title: 'Book Club Meeting', time: formatDate('Wednesday 6:00 PM'), attendees: 12, type: 'study' },
+    { id: 5, title: 'Basketball Tournament', time: formatDate('Saturday 10:00 AM'), attendees: 8, type: 'fun' }
   ];
 
   return (

@@ -65,50 +65,50 @@ export const AddActivityForm = ({ onClose }: AddActivityFormProps) => {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="course">Course</Label>
+              <Label htmlFor="course" className="text-gray-900 font-medium">Course</Label>
               <Select value={formData.course} onValueChange={(value) => setFormData({...formData, course: value})}>
-                <SelectTrigger className="bg-white/10 backdrop-blur-sm border-white/20">
+                <SelectTrigger className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900">
                   <SelectValue placeholder="Select a course" />
                 </SelectTrigger>
-                <SelectContent className="bg-white/90 backdrop-blur-md">
+                <SelectContent className="bg-white/95 backdrop-blur-md border-gray-300">
                   {courses.map((course) => (
-                    <SelectItem key={course} value={course}>{course}</SelectItem>
+                    <SelectItem key={course} value={course} className="text-gray-900">{course}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="type">Type</Label>
+              <Label htmlFor="type" className="text-gray-900 font-medium">Type</Label>
               <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
-                <SelectTrigger className="bg-white/10 backdrop-blur-sm border-white/20">
+                <SelectTrigger className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900">
                   <SelectValue placeholder="Select activity type" />
                 </SelectTrigger>
-                <SelectContent className="bg-white/90 backdrop-blur-md">
+                <SelectContent className="bg-white/95 backdrop-blur-md border-gray-300">
                   {studyTypes.map((type) => (
-                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                    <SelectItem key={type} value={type} className="text-gray-900">{type}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="dueDate">Due Date</Label>
+                <Label htmlFor="dueDate" className="text-gray-900 font-medium">Due Date</Label>
                 <Input
                   id="dueDate"
                   type="date"
                   value={formData.dueDate}
                   onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
-                  className="bg-white/10 backdrop-blur-sm border-white/20"
+                  className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="dueTime">Due Time</Label>
+                <Label htmlFor="dueTime" className="text-gray-900 font-medium">Due Time</Label>
                 <Input
                   id="dueTime"
                   type="time"
                   value={formData.dueTime}
                   onChange={(e) => setFormData({...formData, dueTime: e.target.value})}
-                  className="bg-white/10 backdrop-blur-sm border-white/20"
+                  className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900"
                 />
               </div>
             </div>
@@ -119,37 +119,37 @@ export const AddActivityForm = ({ onClose }: AddActivityFormProps) => {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="type">Event Type</Label>
+              <Label htmlFor="type" className="text-gray-900 font-medium">Event Type</Label>
               <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
-                <SelectTrigger className="bg-white/10 backdrop-blur-sm border-white/20">
+                <SelectTrigger className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900">
                   <SelectValue placeholder="Select event type" />
                 </SelectTrigger>
-                <SelectContent className="bg-white/90 backdrop-blur-md">
+                <SelectContent className="bg-white/95 backdrop-blur-md border-gray-300">
                   {socialTypes.map((type) => (
-                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                    <SelectItem key={type} value={type} className="text-gray-900">{type}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="dueDate">Event Date</Label>
+                <Label htmlFor="dueDate" className="text-gray-900 font-medium">Event Date</Label>
                 <Input
                   id="dueDate"
                   type="date"
                   value={formData.dueDate}
                   onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
-                  className="bg-white/10 backdrop-blur-sm border-white/20"
+                  className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="dueTime">Event Time</Label>
+                <Label htmlFor="dueTime" className="text-gray-900 font-medium">Event Time</Label>
                 <Input
                   id="dueTime"
                   type="time"
                   value={formData.dueTime}
                   onChange={(e) => setFormData({...formData, dueTime: e.target.value})}
-                  className="bg-white/10 backdrop-blur-sm border-white/20"
+                  className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900"
                 />
               </div>
             </div>
@@ -160,47 +160,47 @@ export const AddActivityForm = ({ onClose }: AddActivityFormProps) => {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="club">Club</Label>
+              <Label htmlFor="club" className="text-gray-900 font-medium">Club</Label>
               <Select value={formData.club} onValueChange={(value) => setFormData({...formData, club: value})}>
-                <SelectTrigger className="bg-white/10 backdrop-blur-sm border-white/20">
+                <SelectTrigger className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900">
                   <SelectValue placeholder="Select a club" />
                 </SelectTrigger>
-                <SelectContent className="bg-white/90 backdrop-blur-md">
+                <SelectContent className="bg-white/95 backdrop-blur-md border-gray-300">
                   {clubs.map((club) => (
-                    <SelectItem key={club} value={club}>{club}</SelectItem>
+                    <SelectItem key={club} value={club} className="text-gray-900">{club}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="type">Activity Type</Label>
+              <Label htmlFor="type" className="text-gray-900 font-medium">Activity Type</Label>
               <Input
                 id="type"
                 placeholder="e.g., Meeting, Event, Workshop"
                 value={formData.type}
                 onChange={(e) => setFormData({...formData, type: e.target.value})}
-                className="bg-white/10 backdrop-blur-sm border-white/20"
+                className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="dueDate">Activity Date</Label>
+                <Label htmlFor="dueDate" className="text-gray-900 font-medium">Activity Date</Label>
                 <Input
                   id="dueDate"
                   type="date"
                   value={formData.dueDate}
                   onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
-                  className="bg-white/10 backdrop-blur-sm border-white/20"
+                  className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="dueTime">Activity Time</Label>
+                <Label htmlFor="dueTime" className="text-gray-900 font-medium">Activity Time</Label>
                 <Input
                   id="dueTime"
                   type="time"
                   value={formData.dueTime}
                   onChange={(e) => setFormData({...formData, dueTime: e.target.value})}
-                  className="bg-white/10 backdrop-blur-sm border-white/20"
+                  className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900"
                 />
               </div>
             </div>
@@ -215,15 +215,15 @@ export const AddActivityForm = ({ onClose }: AddActivityFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4">
       <div className="space-y-2">
-        <Label htmlFor="activityType">Activity Category</Label>
+        <Label htmlFor="activityType" className="text-gray-900 font-medium">Activity Category</Label>
         <Select value={activityType} onValueChange={(value: 'study' | 'social' | 'clubs') => setActivityType(value)}>
-          <SelectTrigger className="bg-white/10 backdrop-blur-sm border-white/20">
+          <SelectTrigger className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
-          <SelectContent className="bg-white/90 backdrop-blur-md">
-            <SelectItem value="study">Study</SelectItem>
-            <SelectItem value="social">Social</SelectItem>
-            <SelectItem value="clubs">Clubs</SelectItem>
+          <SelectContent className="bg-white/95 backdrop-blur-md border-gray-300">
+            <SelectItem value="study" className="text-gray-900">Study</SelectItem>
+            <SelectItem value="social" className="text-gray-900">Social</SelectItem>
+            <SelectItem value="clubs" className="text-gray-900">Clubs</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -231,13 +231,13 @@ export const AddActivityForm = ({ onClose }: AddActivityFormProps) => {
       {activityType && (
         <>
           <div className="space-y-2">
-            <Label htmlFor="title">Title *</Label>
+            <Label htmlFor="title" className="text-gray-900 font-medium">Title *</Label>
             <Input
               id="title"
               placeholder="Enter activity title"
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
-              className="bg-white/10 backdrop-blur-sm border-white/20"
+              className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900"
               required
             />
           </div>
@@ -245,13 +245,13 @@ export const AddActivityForm = ({ onClose }: AddActivityFormProps) => {
           {renderDynamicFields()}
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
+            <Label htmlFor="description" className="text-gray-900 font-medium">Description (Optional)</Label>
             <Textarea
               id="description"
               placeholder="Add any additional details..."
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
-              className="bg-white/10 backdrop-blur-sm border-white/20 min-h-[80px]"
+              className="bg-white/60 backdrop-blur-sm border-gray-300 text-gray-900 min-h-[80px]"
             />
           </div>
 
@@ -260,13 +260,13 @@ export const AddActivityForm = ({ onClose }: AddActivityFormProps) => {
               type="button"
               variant="outline"
               onClick={onClose}
-              className="flex-1 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20"
+              className="flex-1 bg-white/60 backdrop-blur-sm border-gray-300 hover:bg-white/80 text-gray-900"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-blue-600/80 hover:bg-blue-700/80 backdrop-blur-sm"
+              className="flex-1 bg-blue-600/90 hover:bg-blue-700/90 backdrop-blur-sm text-white"
             >
               Add Activity
             </Button>

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Calendar, BookOpen, Users, Star } from 'lucide-react';
 import FloatingAddButton from './FloatingAddButton';
@@ -11,6 +12,27 @@ const HomePage = () => {
     { id: 'this-week', label: 'This Week' }
   ];
 
+  const formatDate = (dateString: string) => {
+    if (dateString === 'Today' || dateString === 'Tomorrow') {
+      return dateString;
+    }
+    
+    // For other dates, format as "14 Jun (Mon)"
+    const date = new Date();
+    if (dateString === 'Friday') {
+      date.setDate(date.getDate() + ((5 - date.getDay() + 7) % 7)); // Next Friday
+    } else if (dateString === 'Saturday') {
+      date.setDate(date.getDate() + ((6 - date.getDay() + 7) % 7)); // Next Saturday
+    }
+    
+    const options: Intl.DateTimeFormatOptions = { 
+      day: 'numeric', 
+      month: 'short', 
+      weekday: 'short' 
+    };
+    return date.toLocaleDateString('en-GB', options).replace(',', '');
+  };
+
   const tasks = {
     today: [
       { id: 1, type: 'assignment', title: 'Physics Essay Due', time: '11:59 PM', priority: 'high' },
@@ -22,8 +44,8 @@ const HomePage = () => {
       { id: 5, type: 'club', title: 'Drama Club Meeting', time: '6:00 PM', priority: 'medium' }
     ],
     'this-week': [
-      { id: 6, type: 'assignment', title: 'History Project', time: 'Friday', priority: 'high' },
-      { id: 7, type: 'social', title: 'Campus Festival', time: 'Saturday', priority: 'low' }
+      { id: 6, type: 'assignment', title: 'History Project', time: formatDate('Friday'), priority: 'high' },
+      { id: 7, type: 'social', title: 'Campus Festival', time: formatDate('Saturday'), priority: 'low' }
     ]
   };
 

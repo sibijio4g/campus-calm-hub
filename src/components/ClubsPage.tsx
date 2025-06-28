@@ -1,13 +1,45 @@
+
 import { Star, Users, Calendar } from 'lucide-react';
 import FloatingAddButton from './FloatingAddButton';
 
 const ClubsPage = () => {
+  const formatDate = (dateString: string) => {
+    if (dateString === 'Tomorrow 6:00 PM') {
+      return dateString;
+    }
+    
+    // For other dates, format as "14 Jun (Mon) time"
+    const date = new Date();
+    if (dateString.includes('Friday')) {
+      date.setDate(date.getDate() + ((5 - date.getDay() + 7) % 7)); // Next Friday
+    } else if (dateString.includes('Monday')) {
+      date.setDate(date.getDate() + ((1 - date.getDay() + 7) % 7)); // Next Monday
+    } else if (dateString.includes('Thursday')) {
+      date.setDate(date.getDate() + ((4 - date.getDay() + 7) % 7)); // Next Thursday
+    } else if (dateString.includes('Sunday')) {
+      date.setDate(date.getDate() + ((0 - date.getDay() + 7) % 7)); // Next Sunday
+    }
+    
+    const options: Intl.DateTimeFormatOptions = { 
+      day: 'numeric', 
+      month: 'short', 
+      weekday: 'short' 
+    };
+    const formattedDate = date.toLocaleDateString('en-GB', options).replace(',', '');
+    
+    // Extract time from original string
+    const timeMatch = dateString.match(/\d{1,2}:\d{2}\s?(AM|PM)/i);
+    const time = timeMatch ? timeMatch[0] : '';
+    
+    return `${formattedDate} ${time}`;
+  };
+
   const myClubs = [
     { name: 'Drama Club', role: 'Member', nextMeeting: 'Tomorrow 6:00 PM', members: 28 },
-    { name: 'Chess Society', role: 'Secretary', nextMeeting: 'Friday 4:00 PM', members: 15 },
-    { name: 'Environmental Club', role: 'Volunteer', nextMeeting: 'Monday 5:30 PM', members: 42 },
-    { name: 'Photography Club', role: 'Member', nextMeeting: 'Thursday 7:00 PM', members: 19 },
-    { name: 'Debate Society', role: 'Treasurer', nextMeeting: 'Sunday 3:00 PM', members: 25 }
+    { name: 'Chess Society', role: 'Secretary', nextMeeting: formatDate('Friday 4:00 PM'), members: 15 },
+    { name: 'Environmental Club', role: 'Volunteer', nextMeeting: formatDate('Monday 5:30 PM'), members: 42 },
+    { name: 'Photography Club', role: 'Member', nextMeeting: formatDate('Thursday 7:00 PM'), members: 19 },
+    { name: 'Debate Society', role: 'Treasurer', nextMeeting: formatDate('Sunday 3:00 PM'), members: 25 }
   ];
 
   return (

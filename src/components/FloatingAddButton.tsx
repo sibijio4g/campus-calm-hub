@@ -50,7 +50,7 @@ const FloatingAddButton = () => {
     <div className="space-y-4 p-4">
       <Button
         onClick={() => handleModeSelect('type')}
-        className="w-full h-16 text-lg bg-blue-600/80 hover:bg-blue-700/80 backdrop-blur-sm"
+        className="w-full h-16 text-lg bg-blue-600/80 hover:bg-blue-700/80 backdrop-blur-sm text-white"
         size="lg"
       >
         <Type className="w-6 h-6 mr-3" />
@@ -58,7 +58,7 @@ const FloatingAddButton = () => {
       </Button>
       <Button
         onClick={() => handleModeSelect('speak')}
-        className="w-full h-16 text-lg bg-green-600/80 hover:bg-green-700/80 backdrop-blur-sm"
+        className="w-full h-16 text-lg bg-green-600/80 hover:bg-green-700/80 backdrop-blur-sm text-white"
         size="lg"
         variant="secondary"
       >
@@ -83,7 +83,7 @@ const FloatingAddButton = () => {
 
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={handleClose}>
-          <DrawerContent className="bg-white/10 backdrop-blur-md border-white/20">
+          <DrawerContent className="bg-white/80 backdrop-blur-md border-gray-300">
             <DrawerHeader>
               <DrawerTitle className="text-center text-gray-900">
                 {showOptions ? 'Add New Activity' : 'Create Activity'}
@@ -94,7 +94,7 @@ const FloatingAddButton = () => {
         </Drawer>
       ) : (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-          <DialogContent className="bg-white/10 backdrop-blur-md border-white/20 max-w-md">
+          <DialogContent className="bg-white/80 backdrop-blur-md border-gray-300 max-w-md">
             <DialogHeader>
               <DialogTitle className="text-center text-gray-900">
                 {showOptions ? 'Add New Activity' : 'Create Activity'}
